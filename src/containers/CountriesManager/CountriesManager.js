@@ -8,50 +8,79 @@ class CountriesManager extends Component {
     state = {
         listCountries: [],
         loading: false,
+        region: null,
     }
 
-    componentDidMount = () => {
-        this.setState({loading: true})
-        axios.get("https://restcountries.com/v2/all")
+    handleRegion = (regions) => {
+        this.setState({loading: true});
+        let param;
+        switch(regions) {
+            case 'Tous' :
+                param = 'all';
+                break;
+            case 'Europe' : param = 'region/europe';
+                break;
+            case 'Afrique' : param = 'region/africa';
+                break;
+            case 'Asie' : param = 'region/asia';
+                break;
+            case 'Amérique' : param = 'region/americas';
+                break;
+            case 'Océanie' : param = 'region/oceania';
+                break;
+            default :
+                param = 'all';
+        }
+        axios.get(`https://restcountries.com/v3.1/${param}`)
             .then(response => {
-                // console.log(response);
                 const listCountries = response.data.map(country => {
                     return {
-                        countryName: country.name,
-                        countryFrName: country.translations.fr,
+                        countryName: country.name.common,
+                        countryFrName: country.translations.fra.common,
                         countryCapital: country.capital,
                         countryRegion: country.region,
-                        countryFlag: country.flag
+                        countryFlag: country.flags.png
                     }
                 })
-                this.setState({listCountries});
-                this.setState({loading: false})
+                this.setState({
+                    listCountries,
+                    loading: false,
+                    region: regions
+                });
             })
             .catch(error => {
                 console.log(error);
-                this.setState({loading: false})
+                this.setState({loading: false});
             })
+    }
+
+    componentDidMount = () => {
+        this.handleRegion('Tous');
     }
 
     render() {
         return (
             <div className='container'>
                 <TitreH1>Liste des pays du monde</TitreH1>
-                    <Button typeBtn='btn-info'>Tous</Button>          
-                    <Button typeBtn='btn-info'>Europe</Button>          
-                    <Button typeBtn='btn-info'>Afrique</Button>          
-                    <Button typeBtn='btn-info'>Asie</Button>          
-                    <Button typeBtn='btn-info'>Amérique</Button>          
-                    <Button typeBtn='btn-info'>Océanie</Button>  
+                    <Button typeBtn='btn-info' isSelected={this.state.region === 'Tous'}   click={(event) => this.handleRegion(event.target.innerText)}>Tous</Button>          
+                    <Button typeBtn='btn-info' isSelected={this.state.region === 'Europe'}  click={(event) => this.handleRegion(event.target.innerText)}>Europe</Button>          
+                    <Button typeBtn='btn-info' isSelected={this.state.region === 'Afrique'}  click={(event) => this.handleRegion(event.target.innerText)}>Afrique</Button>          
+                    <Button typeBtn='btn-info' isSelected={this.state.region === 'Asie'}  click={(event) => this.handleRegion(event.target.innerText)}>Asie</Button>          
+                    <Button typeBtn='btn-info' isSelected={this.state.region === 'Amérique'}  click={(event) => this.handleRegion(event.target.innerText)}>Amérique</Button>          
+                    <Button typeBtn='btn-info' isSelected={this.state.region === 'Océanie'}  click={(event) => this.handleRegion(event.target.innerText)}>Océanie</Button>
+                    <span>Nombre de pays : <span className="badge bg-success">{this.state.listCountries.length}</span></span>
                     {
                         this.state.loading ? 
                             <div>Chargement...</div>
                             :
-                            <div>
+                            <div className='row g-0'>
                                 {
                                     this.state.listCountries.map(country => {
-                                        console.log(country);
-                                        return <Country {...country}></Country>
+                                        return (
+                                            <div className='col-12 col-md-6 ' key={country.countryName}> 
+                                                <Country {...country}></Country>
+                                            </div>
+                                        );
                                     })
                                 }
                             </div>
