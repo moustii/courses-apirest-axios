@@ -2,7 +2,7 @@ import React from "react";
 
 const Country = (props) => (
 
-    <div className="row g-0 border m-2">
+    <div className="row h-100 g-0 border m-2">
         <div className="col-4">
             <img src={props.countryFlag} alt={`le drapeau du ${props.countryFrName}`} width='100%' className="p-2" />
         </div>
