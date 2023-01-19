@@ -81,11 +81,11 @@ class CountriesManager extends Component {
             const begin = (this.state.nPage-1)*10; //dans le tableau on commence à l'indice 0, ensuite 10, 20, 30... 
             const end = this.state.nPage*10; // et on termine à l'indice 10, puis 20, 30...
             const listCountriesPer10 = this.state.listCountries.slice(begin, end);
-            console.log(listCountriesPer10);
+            // console.log(listCountriesPer10);
             listCountries = listCountriesPer10.map(country => {
                     return (
                         <div className='col-12 col-md-6 ' key={country.countryName}> 
-                            <Country {...country}></Country>
+                            <Country {...country} {...this.props}></Country>
                         </div>
                     );
                 })

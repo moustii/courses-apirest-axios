@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const Country = (props) => (
 
@@ -10,6 +11,7 @@ const Country = (props) => (
             <h2>Nom: {props.countryFrName} </h2>
             <div>{props.countryCapital}</div>
             <div>{props.countryRegion}</div>
+            <NavLink to={`${props.match.url}/${props.countryFrName}`}>Voir la fiche du pays</NavLink>
         </div>
     </div>
 );
